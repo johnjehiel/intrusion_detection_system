@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Member</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000; /* Black */
+            color: #fff;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #001121; /* Navy Blue */
+            overflow-x: hidden;
+            padding-top: 20px;
+            color: #fff;
+        }
+
+        .sidenav a {
+            padding: 10px 16px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #fff;
+            display: block;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .sidenav a:hover {
+            background-color: #003366; /* Darker Navy Blue */
+        }
+
+        .content {
+            margin-left: 200px;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        h1 {
+            color: #fff; /* White */
+        }
+
+        .form-container {
+            width: 50%;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #333; /* Dark Gray */
+            color: #fff;
+        }
+
+        .form-group input[type="date"] {
+            color: #000; /* Black text */
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            background-color: #001d38; 
+            box-shadow: 0 0 10px rgba(145, 200, 255, 0.5); /* Blurred box radius */
+            font-size: 16px;
+        }
+
+        .form-group button:hover {
+            background-color: #003362;
+        }
+
+        .image-container {
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidenav">
+        <a href="/">Home</a>
+        <a href="/show-intrusion-logs">Intrusion Logs</a>
+        <a href="/authorized-members">Authorized Members</a>
+    </div>
+
+    <div class="content">
+        <h1>Add Member</h1>
+        <div class="form-container">
+            <form id="add-member-form">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <input type="text" id="role" name="role" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob" name="dob" required style="color: white;">
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="scanMember()">Scan Member</button>
+                </div>
+                <!-- <div class="image-container">
+                    <img id="member-image" src="" width="50%" alt="Member Image">
+                </div> -->
+                <p id="success-message" style="color: green;"></p>
+            </form>
+            <!-- <div class="image-container">
+                <img id="member-image" src="/scan-member" width="50%" alt="Member Image">
+            </div> -->
+        </div>
+    </div>
+
+    <script>
+        function scanMember() {
+            const name = document.getElementById('name').value;
+            const role = document.getElementById('role').value;
+            const dob = document.getElementById('dob').value;
+            fetch('/scan-member', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    role: role,
+                    dob: dob
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse JSON response
+            })
+            .then(data => {
+                // alert(data.message);
+                const successMessage = document.getElementById('success-message');
+                successMessage.textContent = data.message;
+            })
+            .catch(error => console.error('Error registering member:', error));
+        }
+    </script>
+</body>
+</html>

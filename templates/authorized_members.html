@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorized Members</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000; /* Navy Blue */
+            color: #fff;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #001121; /* Navy Blue */
+            overflow-x: hidden;
+            padding-top: 20px;
+            color: #fff;
+        }
+
+        .sidenav a {
+            padding: 10px 16px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #fff;
+            display: block;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .sidenav a:hover {
+            background-color: #003366; /* Darker Navy Blue */
+        }
+
+        .content {
+            margin-left: 200px;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        h1 {
+            color: #fff; /* White */
+        }
+
+        #members {
+            margin-top: 20px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .member-heading {
+            background-color: #001d38; 
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(145, 200, 255, 0.5); /* Blurred box radius */
+            width: 100%; /* Set a fixed width for each log item */
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between; /* Evenly space items horizontally */
+            align-items: center;
+            justify-items: center;
+        }
+        
+        .log-heading p {
+            margin-left: 8%;
+            margin-right: 8%;
+        }
+
+        .member-item {
+            background-color: #001121; 
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(145, 200, 255, 0.5); /* Blurred box radius */
+            width: 100%; /* Set a fixed width for each log item */
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between; /* Evenly space items horizontally */
+            align-items: center;
+            justify-items: center;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .member-item p {
+            margin: 0;
+            padding: 0;
+            color: #fff; /* White */
+        }
+
+        .member-item:hover {
+            background-color: #003362;
+        }
+
+        .member-image {
+            width: 150px; /* Set the image width to 150px */
+            height: 150px; /* Set the image height to 150px */
+            object-fit: cover; /* Ensure the image covers the entire area */
+            border-radius: 5px; /* Add a slight border radius */
+            margin-top: 10px;
+        }
+
+        .add-member-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #001d38; 
+            box-shadow: 0 0 10px rgba(145, 200, 255, 0.5); /* Blurred box radius */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .add-member-btn:hover {
+            background-color: #003362;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidenav">
+        <a href="/">Home</a>
+        <a href="/show-intrusion-logs">Intrusion Logs</a>
+        <a href="/authorized-members">Authorized Members</a>
+    </div>
+
+    <div class="content">
+        <h1>Authorized Members</h1>
+        <div id="members">
+            <div class="member-heading">
+                <p>Member ID</p>
+                <p>Name</p>
+                <p>Role</p>
+                <p>DOB</p>
+                <p>Registered On</p>
+                <p>Image</p>
+            </div>
+        </div>
+    </div>
+    <button class="add-member-btn" onclick="window.location.href='/add-member'">Add Member</button>
+    <script>
+        fetch('/get-authorized-members')
+            .then(response => response.json())
+            .then(data => {
+                const membersContainer = document.getElementById('members');
+                data.forEach(member => {
+                    const memberDiv = document.createElement('div');
+                    memberDiv.classList.add('member-item');
+                    memberDiv.innerHTML = `
+                        <p>${member.member_id}</p>
+                        <p>${member.name}</p>
+                        <p>${member.role}</p>
+                        <p>${member.dob}</p>
+                        <p>${member.timestamp}</p>
+                        <img src="data:image/jpeg;base64,${member.image}" class="member-image" />
+                    `;
+                    membersContainer.appendChild(memberDiv);
+                });
+            })
+            .catch(error => console.error('Error fetching intrusion logs:', error));
+    </script>
+</body>
+</html>
